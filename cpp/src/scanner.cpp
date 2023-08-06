@@ -46,7 +46,7 @@ void Scanner::scan_token()
       add_token(STAR);
       break;
     default:
-      Lox::error(line, "Unexpected character");
+      Lox::error(line, std::string("Unexpected character ") + c);
       break;
   }
 };
