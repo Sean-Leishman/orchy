@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include <filesystem>
@@ -19,7 +20,6 @@ int Lox::run_file(char* filename)
   }
 
   int size = file.tellg();
-  std::cout << size << std::endl;
 
   file.seekg(0);
 
@@ -33,30 +33,35 @@ int Lox::run_file(char* filename)
 
   file.close();
 
-  std::stringstream source;
-  source.rdbuf()->pubsetbuf(buffer.data(), size);
+  std::string string{buffer.begin(), buffer.end()};
 
-  std::cout << source.str() << "\n";
-  std::cout << size << "\n";
-
-  run(source);
+  run(string);
   return 0;
 };
 
-int Lox::run(std::stringstream& source)
+int Lox::run(std::string& source)
 {
-  std::cout << source.str() << "\n";
-  std::cout << source.str().length() << "\n";
-
-  Scanner scanner(source.str());
-
-  std::cout << source.str().length() << "\n";
+  Scanner scanner(source);
 
   std::vector<Token> tokens = scanner.scan_tokens();
 
   for (Token token : tokens)
   {
     std::cout << "token: " << token << "\n";
+  }
+}
+
+void Lox::run_prompt()
+{
+  std::string buffer;
+  for (;;)
+  {
+    std::cout << "> ";
+
+    std::getline(std::cin, buffer);
+    run(buffer);
+
+    buffer.clear();
   }
 }
 

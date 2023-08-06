@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
   }
   else
   {
-    // lox.run_prompt();
+    lox.run_prompt();
   }
   return 0;
 }
