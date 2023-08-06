@@ -11,10 +11,22 @@ class Lox
 
   int run_file(char*);
   void run_prompt();
-  int run(std::stringstream&);
+  int run(std::string&);
   static void error(int line, std::string message);
 
   private:
   bool hasError = false;
   static void report(int line, std::string where, std::string message);
 };
+
+namespace
+{
+std::string substring(std::string string, int a, int b)
+{
+  if (a > b)
+  {
+    return string;
+  }
+  return string.substr(a, b - a);
+}
+} // namespace

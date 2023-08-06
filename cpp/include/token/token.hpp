@@ -22,6 +22,8 @@ enum TokenType : int
   EQUAL_EQUAL,
   GREATER,
   GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
 
   IDENTIFIER,
   STRING,
@@ -57,7 +59,10 @@ class Token
 
   public:
   Token(TokenType, std::string, void*, int);
-  std::string to_string() const { return type + " " + lexeme + " "; };
+  std::string to_string() const
+  {
+    return std::to_string(type) + " " + lexeme + " ";
+  };
 };
 
 std::ostream& operator<<(std::ostream& out, Token const& token);
