@@ -30,6 +30,7 @@ class Scanner
   void handle_string();
   void handle_number();
   void handle_identifier();
+  void handle_multi_line_comment();
 
   void add_token(TokenType type) { add_token(type, nullptr); }
   void add_token(TokenType type, void* literal);
