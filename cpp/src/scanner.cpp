@@ -81,6 +81,10 @@ void Scanner::scan_token()
         while (peek() != '\n' && !is_at_end())
           next_char();
       }
+      else if (match('*'))
+      {
+        handle_multi_line_comment();
+      }
       else
       {
         add_token(SLASH);
@@ -114,6 +118,21 @@ void Scanner::scan_token()
       break;
   }
 };
+
+void Scanner::handle_multi_line_comment()
+{
+  while (peek() != '*' && peek(2) != '/' && !is_at_end())
+  {
+    next_char();
+  }
+  if (is_at_end())
+  {
+    Lox::error(line, "Unterminated comment");
+    return;
+  }
+  next_char();
+  next_char();
+}
 
 void Scanner::handle_identifier()
 {
