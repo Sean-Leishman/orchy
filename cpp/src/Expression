@@ -1,0 +1,28 @@
+#include "token.hpp"
+
+struct Expression
+{
+  enum
+  {
+    Binary,
+    Grouping,
+    Literal,
+    Unary,
+  } type;
+};
+struct Binary : Expression
+{
+  Expression left;
+  Token operator;
+  Expression right;
+
+  type get_type() {}
+};
+struct Grouping : Expression
+{
+  Expression expression;
+};
+
+Binary expr = {.type = Binary};
+
+if (expr inst)

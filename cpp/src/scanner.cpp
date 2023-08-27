@@ -109,9 +109,7 @@ void Scanner::scan_token()
       }
       else if (isalpha(c) || c == '_')
       {
-        std::cout << start << "-" << current << std::endl;
         handle_identifier();
-        std::cout << start << "-" << current << std::endl;
       }
       else
       {
@@ -233,7 +231,6 @@ bool Scanner::match(char expected)
 void Scanner::add_token(TokenType type, void* literal)
 {
   std::string text = substring(source, start, current);
-  std::cout << text << std::endl;
   tokens.push_back(Token(type, text, literal, line));
 }
 
