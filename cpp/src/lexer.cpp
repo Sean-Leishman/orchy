@@ -1,6 +1,6 @@
-#include "lexer/lexer.hpp"
-#include "scanner/scanner.hpp"
-#include "token/token.hpp"
+#include "lexer.hpp"
+#include "scanner.hpp"
+#include "token.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -49,6 +49,8 @@ int Lox::run(std::string& source)
   {
     std::cout << "token: " << token << "\n";
   }
+
+  return 0;
 }
 
 void Lox::run_prompt()

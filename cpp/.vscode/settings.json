@@ -1,0 +1,12 @@
+{
+  "cmake.sourceDirectory": "/home/seanleishman/lexer/cpp",
+  "cmake.useCMakePresets": "always",
+  "editor.formatOnSave": true,
+  "clangd.path": "/usr/bin/clangd",
+  "clangd.arguments": [
+    "-log=verbose",
+    "-pretty",
+    "--background-index",
+    "--compile-commands-dir=//home/seanleishman/lexer/cpp/out/build/x64-clang-linux-debug"
+  ]
+}
