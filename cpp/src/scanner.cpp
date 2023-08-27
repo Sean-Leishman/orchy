@@ -1,6 +1,8 @@
-#include "scanner/scanner.hpp"
-#include "lexer/lexer.hpp"
-#include "token/token.hpp"
+#include "constants.h"
+
+#include "lexer.hpp"
+#include "scanner.hpp"
+#include "token.hpp"
 
 #include <cctype>
 #include <stdexcept>

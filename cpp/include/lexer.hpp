@@ -21,7 +21,7 @@ class Lox
 
 namespace
 {
-std::string substring(std::string string, int a, int b)
+inline std::string substring(std::string string, int a, int b)
 {
   if (a > b)
   {
