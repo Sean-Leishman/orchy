@@ -27,27 +27,73 @@ std::vector<std::string> split(std::string str, char delimiter)
 void define_type(std::ofstream* fs, std::string& base_name,
                  std::string& class_name, std::string& field_list)
 {
-  *fs << "struct " + class_name + " : " + base_name + "{\n";
-
+  *fs << "class " + class_name + " : public " + base_name + "{\n";
+   
+  std::string input;
   std::vector<std::string> fields = split(field_list, ',');
   for (auto& field : fields)
   {
-    std::string s = split(field, ' ').at(1);
-    *fs << " " + field + ";";
+    std::string type = split(field, ' ').at(0);
+    std::string name = split(field, ' ').at(1);
+    input += type + " " + name + ";";
   }
+  *fs << input;
 
+  *fs << class_name + "(";
+
+  input = {};
+  for (auto& field : fields)
+  {
+    std::string type = split(field, ' ').at(0);
+    std::string name = split(field, ' ').at(1);
+    input += type + " " + name + ",";
+  }
+  *fs << input.substr(0, input.size()-1);
+  *fs << ") :";
+  
+  input = {};
+  for (auto& field : fields)
+  {
+    std::string s = split(field, ' ').at(1);
+    input += s + "(" + s + "),";
+  }
+  *fs << input.substr(0, input.size()-1);
+  *fs << "{}";
   *fs << "};";
+}
+
+void define_visitor(std::ofstream* fs, std::string& class_name, std::vector<const char*> types) {
+    *fs << "template <typename T> class Visitor {";
+    
+    for (auto& type: types) {
+        std::string t = std::string(type);
+        int split_position = t.find(':');
+        std::string type_name = t.substr(0,split_position);
+
+        *fs << "virtual T visit"  + type_name + "_" + class_name + "(" + type_name + ");";
+    }
+    *fs << "};";
 }
 
 void define_ast(std::string output_dir, std::string base_name,
                 std::vector<const char*> types)
 {
-  std::string output_path = output_dir + "/" + base_name;
-
+  std::string output_path = output_dir + "/" + base_name + ".cpp";
   std::ofstream fs;
-  fs.open(output_path, std::ios::trunc);
+  fs.open(output_path, std::ios::trunc); 
+  
+  for (const char* type: types) {
+    int split_position = std::string(type).find(':');
+    std::string name = std::string(type).substr(0,split_position);
 
-  fs << "struct " + base_name + "{\n";
+    fs << "class " << name << ";\n";
+  }
+
+  fs << "class " + base_name + "{\n";
+  define_visitor(&fs, base_name, types);
+  fs << "template <typename T> T accept(Visitor<T>* visitor);";
+  fs << "};";
+
   for (const char* type : types)
   {
     std::string str_type = std::string(type);
@@ -74,9 +120,9 @@ int main(int argc, char** argv)
     std::string output_dir = argv[1];
     define_ast(
         output_dir, "Expression",
-        std::vector{"Binary:Expression left, Token operator, Expression right",
-                    "Grouping:Expression expression", "Literal:Object value",
-                    "Unary:Token operator, Expression right"});
+        std::vector{"Binary:Expression left,Token op,Expression right",
+                    "Grouping:Expression expression","Literal:Object value",
+                    "Unary:Token op,Expression right"});
     return 0;
   }
   else
