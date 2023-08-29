@@ -49,20 +49,30 @@ enum TokenType : int
   END_OF_FILE,
 };
 
-class Token
+class TokenInterface
+{
+  public:
+  std::string to_string();
+
+  private:
+};
+
+template <typename T>
+class Token : TokenInterface
 {
   private:
   const TokenType type;
   const std::string lexeme;
-  const void* literal;
+  const T literal;
   const int line;
 
   public:
-  Token(TokenType, std::string, void*, int);
+  Token(TokenType, std::string, T, int);
   std::string to_string() const
   {
     return std::to_string(type) + " " + lexeme + " ";
   };
 };
 
-std::ostream& operator<<(std::ostream& out, Token const& token);
+template <typename T>
+std::ostream& operator<<(std::ostream& out, Token<T> const& token);

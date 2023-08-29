@@ -2,6 +2,7 @@
 
 #include "token.hpp"
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -12,7 +13,7 @@ class Scanner
   const std::string source;
   std::unordered_map<std::string, TokenType> keywords;
 
-  std::vector<Token> tokens;
+  std::vector<std::unique_ptr<TokenInterface>> tokens;
 
   int start = 0;
   int current = 0;
@@ -33,12 +34,15 @@ class Scanner
   void handle_multi_line_comment();
 
   void add_token(TokenType type) { add_token(type, nullptr); }
-  void add_token(TokenType type, void* literal);
+
+  template <typename T>
+  void add_token(TokenType type, T literal);
 
   public:
   Scanner();
   Scanner(std::string);
   ~Scanner() {}
 
-  std::vector<Token> scan_tokens();
+  template <typename T>
+  std::vector<std::unique_ptr(TokenInterface)> scan_tokens();
 };

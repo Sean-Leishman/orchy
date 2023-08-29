@@ -5,6 +5,7 @@
 #include "token.hpp"
 
 #include <cctype>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -174,7 +175,7 @@ void Scanner::handle_string()
 
   // Strip ""
   std::string string{substring(source, start + 1, current - 1)};
-  add_token(STRING, &string);
+  add_token(STRING, string);
 }
 
 void Scanner::handle_number()
@@ -193,7 +194,7 @@ void Scanner::handle_number()
     }
   }
   auto number = std::stod(substring(source, start, current));
-  add_token(NUMBER, &number);
+  add_token(NUMBER, number);
 }
 
 char Scanner::peek()
@@ -228,10 +229,15 @@ bool Scanner::match(char expected)
   return true;
 }
 
-void Scanner::add_token(TokenType type, void* literal)
+template <typename T>
+void Scanner::add_token(TokenType type, T literal)
 {
   std::string text = substring(source, start, current);
-  tokens.push_back(Token(type, text, literal, line));
+
+  template <typename T>
+  Token* token<T> = new Token(type, text, literal, line);
+
+  tokens.push_back(std::unique_ptr<TokenInterface>(token));
 }
 
 std::vector<Token> Scanner::scan_tokens()
