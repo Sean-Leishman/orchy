@@ -2,7 +2,8 @@
 
 #include <ostream>
 
-Token::Token(TokenType type, std::string text, void* literal, int line)
+template <typename T>
+Token::Token(TokenType type, std::string text, T literal, int line)
     : type{type}, lexeme{text}, literal{literal}, line{line}
 {
 }
