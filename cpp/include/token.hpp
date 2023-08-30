@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include <string>
 
 enum TokenType : int
@@ -49,30 +50,20 @@ enum TokenType : int
   END_OF_FILE,
 };
 
-class TokenInterface
-{
-  public:
-  std::string to_string();
-
-  private:
-};
-
-template <typename T>
-class Token : TokenInterface
+class Token
 {
   private:
   const TokenType type;
   const std::string lexeme;
-  const T literal;
   const int line;
+  const std::any literal;
 
   public:
-  Token(TokenType, std::string, T, int);
+  Token(TokenType, std::string, std::any, int);
   std::string to_string() const
   {
     return std::to_string(type) + " " + lexeme + " ";
   };
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& out, Token<T> const& token);
+std::ostream& operator<<(std::ostream& out, const Token& token);

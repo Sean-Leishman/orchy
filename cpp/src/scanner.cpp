@@ -229,15 +229,13 @@ bool Scanner::match(char expected)
   return true;
 }
 
-template <typename T>
-void Scanner::add_token(TokenType type, T literal)
+void Scanner::add_token(TokenType type, std::any literal)
 {
   std::string text = substring(source, start, current);
 
-  template <typename T>
-  Token* token<T> = new Token(type, text, literal, line);
+  Token token = Token(type, text, literal, line);
 
-  tokens.push_back(std::unique_ptr<TokenInterface>(token));
+  tokens.push_back(token);
 }
 
 std::vector<Token> Scanner::scan_tokens()

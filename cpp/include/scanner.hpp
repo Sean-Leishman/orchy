@@ -13,7 +13,7 @@ class Scanner
   const std::string source;
   std::unordered_map<std::string, TokenType> keywords;
 
-  std::vector<std::unique_ptr<TokenInterface>> tokens;
+  std::vector<Token> tokens;
 
   int start = 0;
   int current = 0;
@@ -33,16 +33,14 @@ class Scanner
   void handle_identifier();
   void handle_multi_line_comment();
 
-  void add_token(TokenType type) { add_token(type, nullptr); }
+  void add_token(TokenType type) { add_token(type, {}); }
 
-  template <typename T>
-  void add_token(TokenType type, T literal);
+  void add_token(TokenType type, std::any literal);
 
   public:
   Scanner();
   Scanner(std::string);
   ~Scanner() {}
 
-  template <typename T>
-  std::vector<std::unique_ptr(TokenInterface)> scan_tokens();
+  std::vector<Token> scan_tokens();
 };
