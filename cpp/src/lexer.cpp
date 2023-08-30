@@ -43,7 +43,7 @@ int Lox::run(std::string& source)
 {
   Scanner scanner(source);
 
-  std::vector<& Token> tokens = scanner.scan_tokens();
+  std::vector<Token> tokens = scanner.scan_tokens();
 
   for (Token token : tokens)
   {

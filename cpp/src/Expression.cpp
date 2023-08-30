@@ -4,10 +4,10 @@ class Grouping;
 class Literal;
 class Unary;
 class Visitor;
+
 class Expression
 {
-  template <typename T>
-  T accept(Visitor<T>* visitor);
+  std::any accept(Visitor<std::any>& visitor);
 };
 class Binary : public Expression
 {
