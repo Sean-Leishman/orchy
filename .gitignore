@@ -1,2 +1,2 @@
-cpp/out/
-cpp/.cache/
+.cache/
+build/
