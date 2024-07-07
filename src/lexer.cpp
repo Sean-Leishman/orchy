@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "printer.hpp"
 #include "scanner.hpp"
 #include "token.hpp"
 
@@ -9,12 +10,18 @@
 
 #include <filesystem>
 
-int Lox::run_file(char* filename)
-{
+Lox::Lox() {}
+
+int Lox::run_file(char *filename) {
+  Expression expr =
+      Binary(Literal(1), Token(TokenType::PLUS, "+", "", 1), Literal(2));
+
+  auto printer = AstPrinter();
+  std::cout << printer.print(expr) << std::endl;
+
   std::filesystem::path filepath = std::filesystem::current_path() / filename;
   std::ifstream file{filepath, std::fstream::binary | std::fstream::ate};
-  if (!file.is_open())
-  {
+  if (!file.is_open()) {
     std::cerr << "Failed to open file: " << filepath << std::endl;
     return 1;
   }
@@ -24,8 +31,7 @@ int Lox::run_file(char* filename)
   file.seekg(0);
 
   std::vector<char> buffer(size);
-  if (!file.read(buffer.data(), size))
-  {
+  if (!file.read(buffer.data(), size)) {
     std::cerr << "Failed to read file" << std::endl;
     file.close();
     return 1;
@@ -39,25 +45,21 @@ int Lox::run_file(char* filename)
   return 0;
 };
 
-int Lox::run(std::string& source)
-{
+int Lox::run(std::string &source) {
   Scanner scanner(source);
 
   std::vector<Token> tokens = scanner.scan_tokens();
 
-  for (Token token : tokens)
-  {
+  for (Token token : tokens) {
     std::cout << "token: " << token << "\n";
   }
 
   return 0;
 }
 
-void Lox::run_prompt()
-{
+void Lox::run_prompt() {
   std::string buffer;
-  for (;;)
-  {
+  for (;;) {
     std::cout << "> ";
 
     std::getline(std::cin, buffer);
@@ -69,7 +71,6 @@ void Lox::run_prompt()
 
 void Lox::error(int line, std::string message) { report(line, "", message); }
 
-void Lox::report(int line, std::string where, std::string message)
-{
+void Lox::report(int line, std::string where, std::string message) {
   printf("[line %i] Error %s: %s\n", line, where.c_str(), message.c_str());
 }
