@@ -7,19 +7,18 @@
 #include <unordered_map>
 #include <vector>
 
-class Scanner
-{
-  private:
+class Scanner {
+private:
   const std::string source;
   std::unordered_map<std::string, TokenType> keywords;
 
   std::vector<Token> tokens;
 
   int start = 0;
-  int current = 0;
-  int line = 1;
+  int current = 1;
+  int line = 0;
 
-  bool is_at_end() { return current >= source.length(); }
+  bool is_at_end() { return current >= source.size(); }
   bool match(char c);
 
   void scan_token();
@@ -34,10 +33,9 @@ class Scanner
   void handle_multi_line_comment();
 
   void add_token(TokenType type) { add_token(type, {}); }
-
   void add_token(TokenType type, std::any literal);
 
-  public:
+public:
   Scanner();
   Scanner(std::string);
   ~Scanner() {}
