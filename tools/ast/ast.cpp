@@ -3,6 +3,13 @@
 #include <string>
 #include <vector>
 
+std::string ToLower(std::string str) {
+  for (auto &ch : str) {
+    ch = tolower(ch);
+  }
+  return str;
+}
+
 std::vector<std::string> split(std::string str, char delimiter) {
   std::vector<std::string> s{};
   std::string curr = {};
@@ -51,14 +58,15 @@ void define_type(std::ofstream &fs, std::string &base_name,
   fs << input.substr(0, input.size() - 1);
   fs << "{}";
 
-  fs << "template <typename T> T accept(Visitor<T> & visitor) { "
-     << "return visitor->visit_" + class_name + "_" + base_name + "(this);}";
+  fs << "template <typename T> T accept(Visitor<T> * visitor) { "
+     << "return visitor->visit_" + ToLower(class_name) + "_" +
+            ToLower(base_name) + "(this);}";
   fs << "};";
 }
 
 void define_visitor(std::ofstream &fs, std::string &class_name,
                     std::vector<const char *> types) {
-  fs << "template <typename T> class Visitor {";
+  fs << "template <typename T> class Visitor { public:";
   class_name[0] = tolower(class_name[0]);
 
   for (auto &type : types) {
@@ -85,7 +93,8 @@ void define_ast(std::string output_dir, std::string base_name,
   std::ofstream fs;
   fs.open(output_path, std::ios::trunc);
 
-  fs << "#include <token.hpp>\n";
+  fs << "#pragma once\n";
+  fs << "#include \"token.hpp\"\n";
   for (const char *type : types) {
     int split_position = std::string(type).find(':');
     std::string name = std::string(type).substr(0, split_position);
@@ -96,7 +105,7 @@ void define_ast(std::string output_dir, std::string base_name,
   define_visitor(fs, base_name, types);
   base_name[0] = toupper(base_name[0]);
 
-  fs << "class " + base_name + "{\n";
+  fs << "class " + base_name + "{public:\n";
   fs << "template <typename T> T accept(Visitor<T>* visitor);";
   fs << "};";
 

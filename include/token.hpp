@@ -3,8 +3,7 @@
 #include <any>
 #include <string>
 
-enum TokenType : int
-{
+enum TokenType : int {
   LEFT_PAREN,
   RIGHT_PAREN,
   LEFT_BRACE,
@@ -50,20 +49,20 @@ enum TokenType : int
   END_OF_FILE,
 };
 
-class Token
-{
-  private:
+class Token {
+private:
   const TokenType type;
   const std::string lexeme;
   const int line;
   const std::any literal;
 
-  public:
+public:
   Token(TokenType, std::string, std::any, int);
-  std::string to_string() const
-  {
+  std::string to_string() const {
     return std::to_string(type) + " " + lexeme + " ";
   };
+
+  std::string Lexeme() { return lexeme; }
 };
 
-std::ostream& operator<<(std::ostream& out, const Token& token);
+std::ostream &operator<<(std::ostream &out, const Token &token);

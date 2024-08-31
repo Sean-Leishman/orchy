@@ -1,6 +1,6 @@
 set(LIBRARY_NAME lexer_lib)
 
-add_library(${LIBRARY_NAME} lexer.cpp scanner.cpp token.cpp)
+add_library(${LIBRARY_NAME} lexer.cpp scanner.cpp token.cpp printer.cpp)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
