@@ -14,6 +14,7 @@ public:
   std::string visit_grouping_expression(Grouping expr);
 
   std::string visit_literal_expression(Literal expr);
+  std::string visit_unary_expression(Unary expr);
 
 private:
   std::string parenthesize(std::string name, std::vector<Expression> exprs);
