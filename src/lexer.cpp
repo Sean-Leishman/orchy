@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,8 +14,9 @@
 Lox::Lox() {}
 
 int Lox::run_file(char *filename) {
-  Expression expr =
-      Binary(Literal(1), Token(TokenType::PLUS, "+", "", 1), Literal(2));
+  Binary expr =
+      Binary(std::make_unique<Literal>(1), Token(TokenType::PLUS, "+", "", 1),
+             std::make_unique<Literal>(2));
 
   auto printer = AstPrinter();
   std::cout << printer.print(expr) << std::endl;

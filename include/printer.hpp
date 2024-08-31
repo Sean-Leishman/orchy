@@ -1,21 +1,22 @@
-#include <expression.hpp>
+#include "expression.hpp"
 
 #include <vector>
 
-class AstPrinter : public Visitor<std::string> {
+class AstPrinter : public Visitor {
 public:
   AstPrinter(){};
-  ~AstPrinter(){};
+  ~AstPrinter() override;
 
-  std::string print(Expression expr);
+  std::string print(Binary &expr);
 
-  std::string visit_binary_expression(Binary expr);
+  std::any visit_binary_expression(Binary &expr) override;
 
-  std::string visit_grouping_expression(Grouping expr);
+  std::any visit_grouping_expression(Grouping &expr) override;
 
-  std::string visit_literal_expression(Literal expr);
-  std::string visit_unary_expression(Unary expr);
+  std::any visit_literal_expression(Literal &expr) override;
+
+  std::any visit_unary_expression(Unary &expr) override;
 
 private:
-  std::string parenthesize(std::string name, std::vector<Expression> exprs);
+  std::any parenthesize(std::string name, std::vector<Expression *> exprs);
 };
