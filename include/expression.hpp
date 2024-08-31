@@ -1,53 +1,56 @@
 #pragma once
 #include "token.hpp"
+#include <memory>
 class Binary;
 class Grouping;
 class Literal;
 class Unary;
-template <typename T> class Visitor {
+class Visitor {
 public:
-  virtual T visit_binary_expression(Binary);
-  virtual T visit_grouping_expression(Grouping);
-  virtual T visit_literal_expression(Literal);
-  virtual T visit_unary_expression(Unary);
+  virtual ~Visitor() = 0;
+  virtual std::any visit_binary_expression(Binary &) = 0;
+  virtual std::any visit_grouping_expression(Grouping &) = 0;
+  virtual std::any visit_literal_expression(Literal &) = 0;
+  virtual std::any visit_unary_expression(Unary &) = 0;
 };
 class Expression {
 public:
-  template <typename T> T accept(Visitor<T> *visitor);
+  virtual ~Expression() = 0;
+  virtual std::any accept(Visitor *visitor);
+};
+
+class Unary : public Expression {
+public:
+  Unary(Token op, std::unique_ptr<Expression> right);
+
+  Token op;
+  std::unique_ptr<Expression> right_;
+  std::any accept(Visitor *visitor) override;
 };
 class Binary : public Expression {
 public:
-  Expression left;
+  Binary(std::unique_ptr<Expression> left, Token op,
+         std::unique_ptr<Expression> right);
+  ~Binary();
+
+  std::unique_ptr<Expression> left_;
   Token op;
-  Expression right;
-  Binary(Expression left, Token op, Expression right)
-      : left(left), op(op), right(right) {}
-  template <typename T> T accept(Visitor<T> *visitor) {
-    return visitor->visit_binary_expression(this);
-  }
+  std::unique_ptr<Expression> right_;
+  std::any accept(Visitor *visitor) override;
 };
 class Grouping : public Expression {
 public:
-  Expression expression;
-  Grouping(Expression expression) : expression(expression) {}
-  template <typename T> T accept(Visitor<T> *visitor) {
-    return visitor->visit_grouping_expression(this);
-  }
+  Grouping(std::unique_ptr<Expression> expression);
+  ~Grouping();
+
+  std::unique_ptr<Expression> expression_;
+  std::any accept(Visitor *visitor) override;
 };
 class Literal : public Expression {
 public:
+  Literal(std::any value);
+  ~Literal();
+
   std::any value;
-  Literal(std::any value) : value(value) {}
-  template <typename T> T accept(Visitor<T> *visitor) {
-    return visitor->visit_literal_expression(this);
-  }
-};
-class Unary : public Expression {
-public:
-  Token op;
-  Expression right;
-  Unary(Token op, Expression right) : op(op), right(right) {}
-  template <typename T> T accept(Visitor<T> *visitor) {
-    return visitor->visit_unary_expression(this);
-  }
+  std::any accept(Visitor *visitor) override;
 };
